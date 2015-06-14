@@ -1,0 +1,34 @@
+{
+  "name": "nodeaffinity",
+  "version": "0.1.0",
+  "description": "Manages Node process cores. Sets and gets the CPU affinity.",
+  "main": "index.js",
+  "dependencies": {
+    "node-gyp": "^2.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node ./test/test_simple.js",
+    "install": "./node_modules/.bin/node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saquibkhan/nodeaffinity.git"
+  },
+  "keywords": [
+    "node",
+    "core",
+    "affinity",
+    "cpuid",
+    "cpu",
+    "process",
+    "scheduling"
+  ],
+  "author": "Saquib Khan <saquibofficial@gmail.com> (https://github.com/saquibkhan)",
+  "license": "MIT",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/saquibkhan/nodeaffinity/issues"
+  },
+  "homepage": "https://github.com/saquibkhan/nodeaffinity"
+}
