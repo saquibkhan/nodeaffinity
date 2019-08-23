@@ -1,10 +1,10 @@
 {
   "name": "nodeaffinity",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Manages Node process cores. Sets and gets the CPU affinity.",
   "main": "index.js",
   "dependencies": {
-    "node-gyp": "^2.0.1"
+    "node-gyp": "^5.0.3"
   },
   "devDependencies": {},
   "scripts": {
