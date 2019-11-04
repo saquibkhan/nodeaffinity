@@ -5,12 +5,12 @@
 #include <napi.h>
 #include <iostream>
 
-#if defined(V8_OS_POSIX)
+#if defined(_POSIX_C_SOURCE)
  #include <sched.h>
  #include <unistd.h>
-#elif defined (V8_OS_WIN)
+#elif defined (_WIN32)
   #include <windows.h>
-#elif defined (V8_OS_MACOSX)
+#elif defined (__APPLE__)
 
 #endif
 
@@ -33,7 +33,7 @@ Number getAffinity(const CallbackInfo& info) {
 
   long ulCpuMask = -1;
 
-#if V8_OS_POSIX && !V8_OS_MACOSX
+#if _POSIX_C_SOURCE && !__APPLE__
   pid_t p = 0;
   int ret;
   cpu_set_t curMask;
@@ -54,7 +54,7 @@ if (ret != -1)
 }
 #endif
 
-#if V8_OS_WIN
+#if _WIN32
   HANDLE hCurrentProc, hDupCurrentProc;
   DWORD_PTR dwpSysAffinityMask, dwpProcAffinityMask;
 
@@ -84,7 +84,7 @@ Number setAffinity(const CallbackInfo& info) {
 
   long ulCpuMask = info[0].As<Number>().Int64Value();
 
-#if V8_OS_POSIX && !V8_OS_MACOSX
+#if _POSIX_C_SOURCE && !__APPLE__
   pid_t p = 0;
   int ret;
   cpu_set_t newMask;
@@ -106,7 +106,7 @@ Number setAffinity(const CallbackInfo& info) {
   //printf(" sched_getaffinity = %d, cur_mask = %08lx\n", ret, cur_mask);
 #endif
 
-#if V8_OS_WIN
+#if _WIN32
   HANDLE hCurrentProc;
   DWORD_PTR dwpProcAffinityMask = ulCpuMask;
 
