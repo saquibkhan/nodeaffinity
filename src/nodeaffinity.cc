@@ -75,14 +75,14 @@ if (ret != -1)
   return Number::New(env, ulCpuMask);
 }
 
-void setAffinity(const CallbackInfo& info) {
+Number setAffinity(const CallbackInfo& info) {
   auto env = info.Env();
 
   if (info.Length() != 1 || !info[0].IsNumber()) {
     TypeError::New(env, "Invalid argument").ThrowAsJavaScriptException();
   }
 
-  long ulCpuMask = args[0].As<Number>().Int64Value();
+  long ulCpuMask = info[0].As<Number>().Int64Value();
 
 #if V8_OS_POSIX && !V8_OS_MACOSX
   pid_t p = 0;
