@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  var nc = require('./build/Release/nodeaffinity');
+  var nc = require('bindings')('nodeaffinity');
 
   module.exports =  {
     'getAffinity': nc.getAffinity,

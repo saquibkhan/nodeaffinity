@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var nc = require('./../build/Release/nodeaffinity');
+  var nc = require('../');
   var assert = require('assert');
 
   var affinity = nc.getAffinity();
