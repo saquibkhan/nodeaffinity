@@ -4,6 +4,12 @@
   "description": "Manages Node process cores. Sets and gets the CPU affinity.",
   "main": "index.js",
   "types": "types.d.ts",
+  "files": [
+    "src/nodeaffinity.cc",
+    "index.js",
+    "types.d.ts",
+    "binding.gyp"
+  ],
   "dependencies": {
     "bindings": "^1.5.0",
     "node-addon-api": "^1.7.1"
