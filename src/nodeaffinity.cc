@@ -78,7 +78,7 @@ if (ret != -1)
 void setAffinity(const CallbackInfo& info) {
   auto env = info.Env();
 
-  if (info.Length() != 1 && !info[0].IsNumber()) {
+  if (info.Length() != 1 || !info[0].IsNumber()) {
     TypeError::New(env, "Invalid argument").ThrowAsJavaScriptException();
   }
 
