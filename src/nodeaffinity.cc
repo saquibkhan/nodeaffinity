@@ -2,8 +2,7 @@
 //Author: Saquib Khan
 //Email: saquibofficial@gmail.com
 
-#include <node.h>
-#include <v8.h>
+#include <napi.h>
 #include <iostream>
 
 #if defined(V8_OS_POSIX)
@@ -22,15 +21,14 @@
 // #include <pthread.h>
 
 
-using namespace v8;
+using namespace Napi;
 using namespace std;
 
-void getAffinity(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);
+Number getAffinity(const CallbackInfo& info) {
+  auto env = info.Env();
 
-  if (args.Length() > 0) {
-    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Invalid number of arguments")));
+  if (info.Length() > 0) {
+    TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
   }
 
   long ulCpuMask = -1;
@@ -74,20 +72,17 @@ if (ret != -1)
   CloseHandle(hDupCurrentProc);
 #endif
 
-  Local<Number> num = Number::New(isolate, ulCpuMask);
-
-  args.GetReturnValue().Set(num);
+  return Number::New(env, ulCpuMask);
 }
 
-void setAffinity(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);
+void setAffinity(const CallbackInfo& info) {
+  auto env = info.Env();
 
-  if (args.Length() != 1 && !args[0]->IsNumber()) {
-    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Invalid argument")));
+  if (info.Length() != 1 && !info[0].IsNumber()) {
+    TypeError::New(env, "Invalid argument").ThrowAsJavaScriptException();
   }
 
-  long ulCpuMask = args[0]->NumberValue();
+  long ulCpuMask = args[0].As<Number>().Int64Value();
 
 #if V8_OS_POSIX && !V8_OS_MACOSX
   pid_t p = 0;
@@ -128,13 +123,14 @@ void setAffinity(const FunctionCallbackInfo<Value>& args) {
   CloseHandle(hCurrentProc);
 #endif
 
-  Local<Number> num = Number::New(isolate, ulCpuMask);
-  args.GetReturnValue().Set(num);
+  return Number::New(env, ulCpuMask);
 }
 
-void Init(Handle<Object> exports) {
-  NODE_SET_METHOD(exports, "getAffinity", getAffinity);
-  NODE_SET_METHOD(exports, "setAffinity", setAffinity);
+Object Init(Env env, Object exports) {
+  exports["getAffinity"] = Function::New(env, &getAffinity);
+  exports["setAffinity"] = Function::New(env, &setAffinity);
+
+  return exports;
 }
 
-NODE_MODULE(nodeaffinity, Init)
+NODE_API_MODULE(nodeaffinity, Init)

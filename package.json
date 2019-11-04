@@ -4,6 +4,7 @@
   "description": "Manages Node process cores. Sets and gets the CPU affinity.",
   "main": "index.js",
   "dependencies": {
+    "node-addon-api": "^1.7.1",
     "node-gyp": "^5.0.3"
   },
   "devDependencies": {},
