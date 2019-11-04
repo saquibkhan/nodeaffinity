@@ -44,7 +44,7 @@ Number getAffinity(const CallbackInfo& info) {
 if (ret != -1)
 {
   ulCpuMask = 0;
-  for ( int i = 0; i < sizeof(cpu_set_t); i++ )
+  for ( unsigned int i = 0; i < sizeof(cpu_set_t); i++ )
   {
     if ( CPU_ISSET_S(i, sizeof(cpu_set_t), &curMask) )
     {
@@ -90,7 +90,7 @@ Number setAffinity(const CallbackInfo& info) {
   cpu_set_t newMask;
   CPU_ZERO(&newMask);
 
-  for ( int i = 0; i < sizeof(cpu_set_t); i++ )
+  for ( unsigned int i = 0; i < sizeof(cpu_set_t); i++ )
   {
     if (ulCpuMask & 1<<i)
     {
