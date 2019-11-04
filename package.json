@@ -34,6 +34,9 @@
   "os": [
     "!darwin"
   ],
+  "engines": {
+    "node": ">=8.4.0"
+  },
   "author": "Saquib Khan <saquibofficial@gmail.com> (https://github.com/saquibkhan)",
   "license": "MIT",
   "gypfile": true,
