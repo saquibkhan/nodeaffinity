@@ -31,6 +31,9 @@
     "process",
     "scheduling"
   ],
+  "os": [
+    "!darwin"
+  ],
   "author": "Saquib Khan <saquibofficial@gmail.com> (https://github.com/saquibkhan)",
   "license": "MIT",
   "gypfile": true,
