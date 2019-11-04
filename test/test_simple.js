@@ -12,7 +12,7 @@
     mask = 2;
   }
   var newAffinity = nc.setAffinity(mask);
-  assert.equal(newAffinity, mask);
-  assert.equal(nc.getAffinity(), mask);
+  assert.equal(newAffinity, mask, 'setAffinity failed to match');
+  assert.equal(nc.getAffinity(), mask, 'getAffinity failed to match');
 
 }());
