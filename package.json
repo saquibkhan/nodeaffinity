@@ -38,6 +38,9 @@
     "node": ">=8.4.0"
   },
   "author": "Saquib Khan <saquibofficial@gmail.com> (https://github.com/saquibkhan)",
+  "contributors": [
+    "Cameron Tacklind <cameron@tacklind.com>"
+  ],
   "license": "MIT",
   "gypfile": true,
   "bugs": {
