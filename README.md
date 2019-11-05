@@ -1,6 +1,7 @@
-#Sets / Gets the CPU Affinity for Node process
+# Sets / Gets the CPU Affinity for Node process
 
-##Usage
+## Usage
+
 This package cannot be used for OSX. It is tested for Windows and Linux.
 
 ```bash
