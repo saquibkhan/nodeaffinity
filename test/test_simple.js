@@ -1,18 +1,15 @@
-(function() {
-  'use strict';
+"use strict";
 
-  var nc = require('../');
-  var assert = require('assert');
+const assert = require("assert");
 
-  var affinity = nc.getAffinity();
-  var mask = 0;
-  if (affinity > 1) {
-    mask = 1;
-  } else {
-    mask = 2;
-  }
-  var newAffinity = nc.setAffinity(mask);
-  assert.equal(newAffinity, mask, 'setAffinity failed to match');
-  assert.equal(nc.getAffinity(), mask, 'getAffinity failed to match');
+const nc = require("../");
 
-}());
+const affinity = nc.getAffinity();
+
+const mask = affinity > 1 ? 2 : 1;
+
+const newAffinity = nc.setAffinity(mask);
+
+assert.equal(newAffinity, mask, "setAffinity failed to match");
+
+assert.equal(nc.getAffinity(), mask, "getAffinity failed to match");
