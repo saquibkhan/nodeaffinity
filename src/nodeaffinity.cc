@@ -1,4 +1,3 @@
-// urlParser.cc
 //Author: Saquib Khan
 //Email: saquibofficial@gmail.com
 
