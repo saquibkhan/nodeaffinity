@@ -1,11 +1,4 @@
-(function () {
-  'use strict';
-  var nc = require('bindings')('nodeaffinity');
+'use strict';
 
-  module.exports =  {
-    'getAffinity': nc.getAffinity,
-    'setAffinity': nc.setAffinity
-  };
-
-}());
+module.exports = require('bindings')('nodeaffinity');
 
