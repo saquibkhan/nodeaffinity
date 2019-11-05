@@ -1,29 +1,22 @@
-//Author: Saquib Khan
-//Email: saquibofficial@gmail.com
+// Author: Saquib Khan
+// Email: saquibofficial@gmail.com
 
-#include <napi.h>
 #include <iostream>
+#include <napi.h>
 
 #if defined(_POSIX_C_SOURCE)
- #include <sched.h>
- #include <unistd.h>
-#elif defined (_WIN32)
-  #include <windows.h>
-#elif defined (__APPLE__)
+#include <sched.h>
+#include <unistd.h>
+#elif defined(_WIN32)
+#include <windows.h>
+#elif defined(__APPLE__)
 
 #endif
-
-
-// #include <mach_init.h>
-// #include <thread_policy.h>
-// #include <sched.h>
-// #include <pthread.h>
-
 
 using namespace Napi;
 using namespace std;
 
-Number getAffinity(const CallbackInfo& info) {
+Number getAffinity(const CallbackInfo &info) {
   auto env = info.Env();
 
   if (info.Length() > 0) {
@@ -39,18 +32,15 @@ Number getAffinity(const CallbackInfo& info) {
   CPU_ZERO(&curMask);
 
   ret = sched_getaffinity(p, sizeof(cpu_set_t), &curMask);
-  //printf(" sched_getaffinity = %d, cur_mask = %08lx\n", ret, cur_mask);
-if (ret != -1)
-{
-  ulCpuMask = 0;
-  for ( unsigned int i = 0; i < sizeof(cpu_set_t); i++ )
-  {
-    if ( CPU_ISSET_S(i, sizeof(cpu_set_t), &curMask) )
-    {
-      ulCpuMask = ulCpuMask | (1<<i);
+  // printf(" sched_getaffinity = %d, cur_mask = %08lx\n", ret, cur_mask);
+  if (ret != -1) {
+    ulCpuMask = 0;
+    for (unsigned int i = 0; i < sizeof(cpu_set_t); i++) {
+      if (CPU_ISSET_S(i, sizeof(cpu_set_t), &curMask)) {
+        ulCpuMask = ulCpuMask | (1 << i);
+      }
     }
   }
-}
 #endif
 
 #if _WIN32
@@ -59,12 +49,10 @@ if (ret != -1)
 
   // Obtain a usable handle of the current process
   hCurrentProc = GetCurrentProcess();
-  DuplicateHandle(hCurrentProc, hCurrentProc, hCurrentProc,
-                  &hDupCurrentProc, 0, FALSE, DUPLICATE_SAME_ACCESS);
+  DuplicateHandle(hCurrentProc, hCurrentProc, hCurrentProc, &hDupCurrentProc, 0, FALSE, DUPLICATE_SAME_ACCESS);
 
   // Get the old affinity mask
-  GetProcessAffinityMask(hDupCurrentProc,
-                         &dwpProcAffinityMask, &dwpSysAffinityMask);
+  GetProcessAffinityMask(hDupCurrentProc, &dwpProcAffinityMask, &dwpSysAffinityMask);
 
   ulCpuMask = dwpProcAffinityMask;
 
@@ -74,7 +62,7 @@ if (ret != -1)
   return Number::New(env, ulCpuMask);
 }
 
-Number setAffinity(const CallbackInfo& info) {
+Number setAffinity(const CallbackInfo &info) {
   auto env = info.Env();
 
   if (info.Length() != 1 || !info[0].IsNumber()) {
@@ -89,20 +77,17 @@ Number setAffinity(const CallbackInfo& info) {
   cpu_set_t newMask;
   CPU_ZERO(&newMask);
 
-  for ( unsigned int i = 0; i < sizeof(cpu_set_t); i++ )
-  {
-    if (ulCpuMask & 1<<i)
-    {
+  for (unsigned int i = 0; i < sizeof(cpu_set_t); i++) {
+    if (ulCpuMask & 1 << i) {
       CPU_SET(i, &newMask);
     }
   }
 
   ret = sched_setaffinity(p, sizeof(cpu_set_t), &newMask);
-  if (ret == -1)
-  {
-    ulCpuMask = -1; 
+  if (ret == -1) {
+    ulCpuMask = -1;
   }
-  //printf(" sched_getaffinity = %d, cur_mask = %08lx\n", ret, cur_mask);
+  // printf(" sched_getaffinity = %d, cur_mask = %08lx\n", ret, cur_mask);
 #endif
 
 #if _WIN32
@@ -114,8 +99,7 @@ Number setAffinity(const CallbackInfo& info) {
 
   // Get the old affinity mask
   BOOL bRet = SetProcessAffinityMask(hCurrentProc, dwpProcAffinityMask);
-  if (bRet == false)
-  {
+  if (bRet == false) {
     ulCpuMask = -1;
   }
 
