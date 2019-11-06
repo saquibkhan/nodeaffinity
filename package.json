@@ -1,6 +1,6 @@
 {
   "name": "nodeaffinity",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Manages Node process cores. Sets and gets the CPU affinity.",
   "main": "index.js",
   "types": "types.d.ts",
