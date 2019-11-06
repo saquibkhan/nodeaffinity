@@ -3,13 +3,23 @@
   "version": "1.0.0",
   "description": "Manages Node process cores. Sets and gets the CPU affinity.",
   "main": "index.js",
+  "types": "types.d.ts",
+  "files": [
+    "src/nodeaffinity.cc",
+    "index.js",
+    "types.d.ts",
+    "binding.gyp"
+  ],
   "dependencies": {
-    "node-gyp": "^5.0.3"
+    "bindings": "^1.5.0",
+    "node-addon-api": "^1.7.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "prettier": "^1.18.2"
+  },
   "scripts": {
     "test": "node ./test/test_simple.js",
-    "install": "./node_modules/.bin/node-gyp rebuild"
+    "install": "node-gyp rebuild"
   },
   "repository": {
     "type": "git",
@@ -24,7 +34,16 @@
     "process",
     "scheduling"
   ],
+  "os": [
+    "!darwin"
+  ],
+  "engines": {
+    "node": ">=8.4.0"
+  },
   "author": "Saquib Khan <saquibofficial@gmail.com> (https://github.com/saquibkhan)",
+  "contributors": [
+    "Cameron Tacklind <cameron@tacklind.com>"
+  ],
   "license": "MIT",
   "gypfile": true,
   "bugs": {

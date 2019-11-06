@@ -1,117 +1,96 @@
-// urlParser.cc
-//Author: Saquib Khan
-//Email: saquibofficial@gmail.com
+// Author: Saquib Khan
+// Email: saquibofficial@gmail.com
 
-#include <node.h>
-#include <v8.h>
 #include <iostream>
+#include <napi.h>
 
-#if defined(V8_OS_POSIX)
- #include <sched.h>
- #include <unistd.h>
-#elif defined (V8_OS_WIN)
-  #include <windows.h>
-#elif defined (V8_OS_MACOSX)
+#if defined(_POSIX_C_SOURCE)
+#include <sched.h>
+#include <unistd.h>
+#elif defined(_WIN32)
+#include <windows.h>
+#elif defined(__APPLE__)
 
 #endif
 
-
-// #include <mach_init.h>
-// #include <thread_policy.h>
-// #include <sched.h>
-// #include <pthread.h>
-
-
-using namespace v8;
+using namespace Napi;
 using namespace std;
 
-void getAffinity(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);
+Number getAffinity(const CallbackInfo &info) {
+  auto env = info.Env();
 
-  if (args.Length() > 0) {
-    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Invalid number of arguments")));
+  if (info.Length() > 0) {
+    TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
   }
 
   long ulCpuMask = -1;
 
-#if V8_OS_POSIX && !V8_OS_MACOSX
+#if _POSIX_C_SOURCE && !__APPLE__
   pid_t p = 0;
   int ret;
   cpu_set_t curMask;
   CPU_ZERO(&curMask);
 
   ret = sched_getaffinity(p, sizeof(cpu_set_t), &curMask);
-  //printf(" sched_getaffinity = %d, cur_mask = %08lx\n", ret, cur_mask);
-if (ret != -1)
-{
-  ulCpuMask = 0;
-  for ( int i = 0; i < sizeof(cpu_set_t); i++ )
-  {
-    if ( CPU_ISSET_S(i, sizeof(cpu_set_t), &curMask) )
-    {
-      ulCpuMask = ulCpuMask | (1<<i);
+  // printf(" sched_getaffinity = %d, cur_mask = %08lx\n", ret, cur_mask);
+  if (ret != -1) {
+    ulCpuMask = 0;
+    for (unsigned int i = 0; i < sizeof(cpu_set_t); i++) {
+      if (CPU_ISSET_S(i, sizeof(cpu_set_t), &curMask)) {
+        ulCpuMask = ulCpuMask | (1 << i);
+      }
     }
   }
-}
 #endif
 
-#if V8_OS_WIN
+#if _WIN32
   HANDLE hCurrentProc, hDupCurrentProc;
   DWORD_PTR dwpSysAffinityMask, dwpProcAffinityMask;
 
   // Obtain a usable handle of the current process
   hCurrentProc = GetCurrentProcess();
-  DuplicateHandle(hCurrentProc, hCurrentProc, hCurrentProc,
-                  &hDupCurrentProc, 0, FALSE, DUPLICATE_SAME_ACCESS);
+  DuplicateHandle(hCurrentProc, hCurrentProc, hCurrentProc, &hDupCurrentProc, 0, FALSE, DUPLICATE_SAME_ACCESS);
 
   // Get the old affinity mask
-  GetProcessAffinityMask(hDupCurrentProc,
-                         &dwpProcAffinityMask, &dwpSysAffinityMask);
+  GetProcessAffinityMask(hDupCurrentProc, &dwpProcAffinityMask, &dwpSysAffinityMask);
 
   ulCpuMask = dwpProcAffinityMask;
 
   CloseHandle(hDupCurrentProc);
 #endif
 
-  Local<Number> num = Number::New(isolate, ulCpuMask);
-
-  args.GetReturnValue().Set(num);
+  return Number::New(env, ulCpuMask);
 }
 
-void setAffinity(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);
+Number setAffinity(const CallbackInfo &info) {
+  auto env = info.Env();
 
-  if (args.Length() != 1 && !args[0]->IsNumber()) {
-    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Invalid argument")));
+  if (info.Length() != 1 || !info[0].IsNumber()) {
+    TypeError::New(env, "Invalid argument").ThrowAsJavaScriptException();
   }
 
-  long ulCpuMask = args[0]->NumberValue();
+  long ulCpuMask = info[0].As<Number>().Int64Value();
 
-#if V8_OS_POSIX && !V8_OS_MACOSX
+#if _POSIX_C_SOURCE && !__APPLE__
   pid_t p = 0;
   int ret;
   cpu_set_t newMask;
   CPU_ZERO(&newMask);
 
-  for ( int i = 0; i < sizeof(cpu_set_t); i++ )
-  {
-    if (ulCpuMask & 1<<i)
-    {
+  for (unsigned int i = 0; i < sizeof(cpu_set_t); i++) {
+    if (ulCpuMask & 1 << i) {
       CPU_SET(i, &newMask);
     }
   }
 
   ret = sched_setaffinity(p, sizeof(cpu_set_t), &newMask);
-  if (ret == -1)
-  {
-    ulCpuMask = -1; 
+  if (ret == -1) {
+    ulCpuMask = -1;
   }
-  //printf(" sched_getaffinity = %d, cur_mask = %08lx\n", ret, cur_mask);
+  // printf(" sched_getaffinity = %d, cur_mask = %08lx\n", ret, cur_mask);
 #endif
 
-#if V8_OS_WIN
+#if _WIN32
   HANDLE hCurrentProc;
   DWORD_PTR dwpProcAffinityMask = ulCpuMask;
 
@@ -120,21 +99,21 @@ void setAffinity(const FunctionCallbackInfo<Value>& args) {
 
   // Get the old affinity mask
   BOOL bRet = SetProcessAffinityMask(hCurrentProc, dwpProcAffinityMask);
-  if (bRet == false)
-  {
+  if (bRet == false) {
     ulCpuMask = -1;
   }
 
   CloseHandle(hCurrentProc);
 #endif
 
-  Local<Number> num = Number::New(isolate, ulCpuMask);
-  args.GetReturnValue().Set(num);
+  return Number::New(env, ulCpuMask);
 }
 
-void Init(Handle<Object> exports) {
-  NODE_SET_METHOD(exports, "getAffinity", getAffinity);
-  NODE_SET_METHOD(exports, "setAffinity", setAffinity);
+Object Init(Env env, Object exports) {
+  exports["getAffinity"] = Function::New(env, &getAffinity);
+  exports["setAffinity"] = Function::New(env, &setAffinity);
+
+  return exports;
 }
 
-NODE_MODULE(nodeaffinity, Init)
+NODE_API_MODULE(nodeaffinity, Init)
