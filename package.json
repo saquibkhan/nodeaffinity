@@ -1,6 +1,6 @@
 {
-  "name": "nodeaffinity",
-  "version": "1.1.0",
+  "name": "@saquibkhan/nodeaffinity",
+  "version": "1.1.1",
   "description": "Manages Node process cores. Sets and gets the CPU affinity.",
   "main": "index.js",
   "types": "types.d.ts",
@@ -49,5 +49,8 @@
   "bugs": {
     "url": "https://github.com/saquibkhan/nodeaffinity/issues"
   },
-  "homepage": "https://github.com/saquibkhan/nodeaffinity"
+  "homepage": "https://github.com/saquibkhan/nodeaffinity",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
 }
