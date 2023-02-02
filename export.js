@@ -1,6 +1,6 @@
 const axios = require("axios");
 const XLSX = require("xlsx");
-const token = process.env.TOKEN;
+const token = process.env.GITHUB_TOKEN;
 const headers = {
   "Authorization": `Token ${token}`
 };
