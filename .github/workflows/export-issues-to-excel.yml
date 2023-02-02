@@ -21,32 +21,6 @@ jobs:
         npm config set registry https://registry.npmjs.org/
         npm install axios xlsx
 
-    - name: Export issues to Excel
+    - name: Run export-issues script
       run: |
-        const axios = require("axios");
-        const XLSX = require("xlsx");
-
-        // Set the GitHub API token
-        const token = "${{ secrets.GITHUB_TOKEN }}"
-
-        // Define the headers for the API request
-        const headers = {
-          "Authorization": `Token ${token}`
-        }
-
-        // Define the repository name and owner
-        const repoName = "nodeaffinity";
-        const repoOwner = "saquibkhan";
-
-        // Make a request to the GitHub API to retrieve all of the repository's issues
-        axios.get(`https://api.github.com/repos/${repoOwner}/${repoName}/issues`, { headers })
-          .then(response => {
-            // Create a workbook from the retrieved issues data
-            const workbook = XLSX.utils.json_to_sheet(response.data);
-
-            // Write the workbook to an Excel file
-            XLSX.writeFile(XLSX.utils.book_new([workbook]), "issues.xlsx");
-          })
-          .catch(error => {
-            console.error(error);
-          });
+        node export.js
