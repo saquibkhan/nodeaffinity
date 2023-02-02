@@ -23,4 +23,6 @@ jobs:
 
     - name: Run export-issues script
       run: |
-        node env=${{ secrets.GITHUB_TOKEN }} export.js
+        node export.js
+      env:
+       TOKEN: ${{ secrets.GITHUB_TOKEN }}
