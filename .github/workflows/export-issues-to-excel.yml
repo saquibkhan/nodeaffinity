@@ -22,8 +22,9 @@ jobs:
         npm install axios xlsx
 
     - name: Run export-issues script
-      run: |
-        export TOKEN=$GITHUB_TOKEN
-        node export.js
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        export GITHUB_TOKEN=$GITHUB_TOKEN
+        node export.js
+
