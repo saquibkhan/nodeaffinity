@@ -1,0 +1,52 @@
+name: Export Issues to Excel
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  export-issues:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14
+
+    - name: Install dependencies
+      run: |
+        npm install axios xlsx
+
+    - name: Export issues to Excel
+      run: |
+        const axios = require("axios");
+        const XLSX = require("xlsx");
+
+        // Set the GitHub API token
+        const token = "${{ secrets.GITHUB_TOKEN }}"
+
+        // Define the headers for the API request
+        const headers = {
+          "Authorization": `Token ${token}`
+        }
+
+        // Define the repository name and owner
+        const repoName = "nodeaffinity";
+        const repoOwner = "saquibkhan";
+
+        // Make a request to the GitHub API to retrieve all of the repository's issues
+        axios.get(`https://api.github.com/repos/${repoOwner}/${repoName}/issues`, { headers })
+          .then(response => {
+            // Create a workbook from the retrieved issues data
+            const workbook = XLSX.utils.json_to_sheet(response.data);
+
+            // Write the workbook to an Excel file
+            XLSX.writeFile(XLSX.utils.book_new([workbook]), "issues.xlsx");
+          })
+          .catch(error => {
+            console.error(error);
+          });
