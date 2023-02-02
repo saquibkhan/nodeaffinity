@@ -8,5 +8,6 @@ const repoName = "nodeaffinity";
 const repoOwner = "saquibkhan";
 axios.get(`https://api.github.com/repos/${repoOwner}/${repoName}/issues`, { headers })
  .then(response => {
+  console.log(response.data);
   const workbook = XLSX.utils.json_to_sheet(response.data);
 XLSX.writeFile(XLSX.utils.book_new([workbook]), "issues.xlsx");});
