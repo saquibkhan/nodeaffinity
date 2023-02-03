@@ -24,7 +24,7 @@ const desiredData = filteredData.map(obj => ({
 const workbook = XLSX.utils.json_to_sheet(desiredData);
   
   
-  //const workbook = XLSX.utils.json_to_sheet(response.data);
+  //const workbook = XLSX.utils.json_to_sheet(desiredData);
    console.log("************** workbook *******************");
   console.log(workbook);
 XLSX.writeFile(XLSX.utils.book_new([workbook]), "issues.xlsx");});
