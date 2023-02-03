@@ -31,4 +31,9 @@ const workbook = XLSX.utils.json_to_sheet(desiredData);
   //const workbook = XLSX.utils.json_to_sheet(desiredData);
    console.log("************** workbook *******************");
   console.log(workbook);
-XLSX.writeFile(XLSX.utils.book_new([workbook]), "issues.xlsx");});
+//XLSX.writeFile(XLSX.utils.book_new([workbook]), "issues.xlsx");});
+
+const worksheet = XLSX.utils.aoa_to_sheet([]);
+XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+XLSX.writeFile(workbook, 'issues.xls');
