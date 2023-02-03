@@ -43,16 +43,17 @@ XLSX.writeFile(workbook, 'issues.xls');});
 
 // Upload the xlsx file to GitHub's artifact storage
 
-const artifactUploader = artifact.uploader;
+const artifactClient = artifact.create()
+
 const pathToXlsxFile = "issues.xlsx";
 const artifactName = "issues";
+const files = [
+    'issues.xls'
+];
 
-artifactUploader.uploadArtifact(artifactName, [pathToXlsxFile], path.resolve("./"))
-  .then(() => {
-    console.log(`Artifact ${artifactName} uploaded`);
-    core.setOutput("artifactName", artifactName);
-  })
-  .catch(error => {
-    console.error(error);
-    core.setFailed(error.message);
-  });
+const rootDirectory = '.' // Also possible to use __dirname
+const options = {
+    continueOnError: false
+}
+
+const uploadResponse = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options);
