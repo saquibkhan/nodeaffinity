@@ -24,7 +24,9 @@ jobs:
     - name: Run export-issues script
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       ACTIONS_RUNTIME_TOKEN : ${{ secrets.ACTIONS_RUNTIME_TOKEN }}
       run: |
         export GITHUB_TOKEN=$GITHUB_TOKEN
+        export ACTIONS_RUNTIME_TOKEN=$ACTIONS_RUNTIME_TOKEN
         node export.js
 
