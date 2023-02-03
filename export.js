@@ -36,3 +36,21 @@ const worksheet = XLSX.utils.json_to_sheet(desiredData);
 
 XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 XLSX.writeFile(workbook, 'issues.xls');});
+
+
+// Upload the xlsx file to GitHub's artifact storage
+const artifactUploader = require('@actions/artifact').uploader;
+const core = require('@actions/core');
+
+const pathToXlsxFile = "issues.xlsx";
+const artifactName = "issues";
+
+artifactUploader.uploadArtifact(artifactName, [pathToXlsxFile], path.resolve("./"))
+  .then(() => {
+    console.log(`Artifact ${artifactName} uploaded`);
+    core.setOutput("artifactName", artifactName);
+  })
+  .catch(error => {
+    console.error(error);
+    core.setFailed(error.message);
+  });
