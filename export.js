@@ -1,5 +1,8 @@
 const axios = require("axios");
 const XLSX = require("xlsx");
+const artifact = require('@actions/artifact');
+const core = require('@actions/core');
+
 const token = process.env.GITHUB_TOKEN;
 const headers = {
   "Authorization": `Token ${token}`
@@ -39,9 +42,8 @@ XLSX.writeFile(workbook, 'issues.xls');});
 
 
 // Upload the xlsx file to GitHub's artifact storage
-const artifactUploader = require('@actions/artifact').uploader;
-const core = require('@actions/core');
 
+const artifactUploader = artifact.uploader;
 const pathToXlsxFile = "issues.xlsx";
 const artifactName = "issues";
 
