@@ -14,10 +14,10 @@ axios.get(`https://api.github.com/repos/${repoOwner}/${repoName}/issues`, { head
   const filteredData = response.data.filter(obj => obj.issueName && obj.id && obj.createdDate && obj.closedDate && obj.labels);
 
 const desiredData = filteredData.map(obj => ({
-  "Issue Name": obj.issueName,
+  "Issue Name": obj.title,
   "ID": obj.id,
-  "Created Date": obj.createdDate,
-  "Closed Date": obj.closedDate,
+  "Created Date": obj.created_at,
+  "Closed Date": obj.closed_at,
   "Labels": obj.labels
 }));
 
