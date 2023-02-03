@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         npm config set registry https://registry.npmjs.org/
-        npm install axios xlsx
+        npm install axios xlsx @actions/artifact @actions/core
 
     - name: Run export-issues script
       env:
