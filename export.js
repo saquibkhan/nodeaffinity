@@ -35,7 +35,8 @@ const worksheet = XLSX.utils.json_to_sheet(desiredData);
   //const workbook = XLSX.utils.json_to_sheet(desiredData);
    console.log("************** worksheet *******************");
   console.log(worksheet);
-//XLSX.writeFile(XLSX.utils.book_new([workbook]), "issues.xlsx");});
+//XLSX.writeFile(XLSX.utils.book_new([workbook]), "issues.xlsx");
+
 
 XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 XLSX.writeFile(workbook, 'issues.xls');});
@@ -57,3 +58,9 @@ const options = {
 }
 
 artifactClient.uploadArtifact(artifactName, files, rootDirectory, options);
+
+
+
+});
+
+
