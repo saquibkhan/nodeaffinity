@@ -11,14 +11,12 @@ axios.get(`https://api.github.com/repos/${repoOwner}/${repoName}/issues`, { head
  console.log("************** response data *******************");
   console.log(response.data);
   
-  const filteredData = response.data.filter(obj => obj.issueName && obj.id && obj.createdDate && obj.closedDate && obj.labels);
+  const filteredData = response.data.filter(obj => obj.title && obj.id && obj.created_at);
 
 const desiredData = filteredData.map(obj => ({
   "Issue Name": obj.title,
   "ID": obj.id,
-  "Created Date": obj.created_at,
-  "Closed Date": obj.closed_at,
-  "Labels": obj.labels
+  "Created Date": obj.created_at
 }));
 
  console.log("************** desiredData *******************");
